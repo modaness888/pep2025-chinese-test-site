@@ -1,47 +1,630 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2025年人教版八年级语文知识测试</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h1 { color: #333; }
-        .question { margin-bottom: 20px; }
-        button { padding: 10px 20px; }
+        :root {
+            color-scheme: light;
+            --primary: #2a62ff;
+            --primary-dark: #1e43b5;
+            --secondary: #ffc93c;
+            --surface: #f7f9ff;
+            --text: #222;
+            --text-muted: #5c657a;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #fef9f5);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 12px 40px rgba(80, 92, 139, 0.12);
+            border-radius: 0 0 32px 32px;
+            padding: 48px 24px 32px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin: 0 0 12px;
+            color: var(--primary-dark);
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        main {
+            width: min(960px, 100%);
+            margin: -40px auto 80px;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 60px rgba(55, 84, 170, 0.15);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        .meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .meta-chip {
+            background: var(--surface);
+            padding: 6px 12px;
+            border-radius: 999px;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e3e8ff;
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 24px 0;
+        }
+
+        #progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), #6c9bff);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            padding: 18px 0 12px;
+            border-bottom: 1px solid #f0f2f8;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question h3 {
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+        }
+
+        .question p {
+            margin: 0 0 16px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        label input {
+            margin-top: 4px;
+        }
+
+        .text-answer {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #dfe3ef;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #submit-btn {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(48, 96, 255, 0.25);
+        }
+
+        #submit-btn:disabled {
+            background: #9fb3ff;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #reset-btn {
+            background: white;
+            color: var(--primary-dark);
+            border: 1px solid #ced6f5;
+        }
+
+        button:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 15px 30px rgba(55, 84, 170, 0.2);
+        }
+
+        #result-card {
+            margin-top: 32px;
+            padding: clamp(1.25rem, 3vw, 2rem);
+            border: 1px solid #e7e9ff;
+            border-radius: var(--border-radius);
+            background: #fdfdff;
+        }
+
+        #result-card h2 {
+            margin-top: 0;
+            color: var(--primary-dark);
+        }
+
+        .summary-score {
+            font-size: clamp(1.5rem, 4vw, 2.4rem);
+            margin: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .badge.success {
+            background: rgba(65, 180, 120, 0.15);
+            color: #1f7a52;
+        }
+
+        .badge.warning {
+            background: rgba(255, 180, 0, 0.15);
+            color: #a86800;
+        }
+
+        .badge.danger {
+            background: rgba(255, 71, 87, 0.15);
+            color: #c0392b;
+        }
+
+        .question-result {
+            border-top: 1px solid #eceef8;
+            padding: 16px 0;
+        }
+
+        .question-result h4 {
+            margin: 0 0 6px;
+        }
+
+        .question-result p {
+            margin: 4px 0;
+            color: var(--text-muted);
+        }
+
+        .knowledge-tips {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 20px;
+            background: #fff7eb;
+            border: 1px dashed #ffb347;
+        }
+
+        .knowledge-tips ul {
+            margin: 12px 0 0 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 12px 48px;
+            color: #7a819c;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1.25rem;
+            }
+
+            .question p {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>2025年人教版八年级语文知识测试</h1>
-    <div id="quiz">
-        <div class="question">
-            <p>1. 《记承天寺夜游》这篇古文的作者是谁？</p>
-            <label><input type="radio" name="q1" value="A"> 苏轩</label><br>
-            <label><input type="radio" name="q1" value="B"> 欧阳修</label><br>
-            <label><input type="radio" name="q1" value="C"> 杜甫</label><br>
-        </div>
-        <div class="question">
-            <p>2. 下列哪项体现了新版教材强调的跨学科知识？</p>
-            <label><input type="radio" name="q2" value="A"> 只背读古诗词</label><br>
-            <label><input type="radio" name="q2" value="B"> 阅读科技文章并写感想</label><br>
-            <label><input type="radio" name="q2" value="C"> 模仿名人书法</label><br>
-        </div>
-        <button onclick="gradeQuiz()">提交答案</button>
-    </div>
-    <div id="result"></div>
+    <header>
+        <h1>2025年人教版八年级语文知识测试</h1>
+        <p>覆盖上册统编教材“文学阅读·名著导读·综合性学习”三大板块，帮助你快速自检。</p>
+    </header>
+    <main>
+        <section class="card" aria-label="测试题目">
+            <div class="meta-strip">
+                <span class="meta-chip">题量：8 题</span>
+                <span class="meta-chip">总分：100 分</span>
+                <span class="meta-chip">建议用时：15 分钟</span>
+            </div>
+            <div id="progress-bar" aria-hidden="true">
+                <span></span>
+            </div>
+            <form id="quiz-form">
+                <div id="question-container"></div>
+                <div class="actions">
+                    <button id="submit-btn" type="submit">提交并查看诊断</button>
+                    <button id="reset-btn" type="button">重新作答</button>
+                </div>
+            </form>
+            <div id="result-card" hidden>
+                <h2>成绩诊断</h2>
+                <p class="summary-score" id="summary-score"></p>
+                <span class="badge" id="summary-level"></span>
+                <p id="summary-comment"></p>
+                <div id="question-results"></div>
+                <div class="knowledge-tips">
+                    <strong>课标回顾建议</strong>
+                    <ul id="tips-list"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        依据人民教育出版社 2025 年版八年级语文教材要点整理 · 题库持续更新
+    </footer>
     <script>
-        function gradeQuiz() {
-            var score = 0;
-            var answers = {q1: 'A', q2: 'B'};
-            for (var q in answers) {
-                var radios = document.getElementsByName(q);
-                for (var i=0; i<radios.length; i++) {
-                    if (radios[i].checked && radios[i].value === answers[q]) {
-                        score++;
+        const questions = [
+            {
+                id: "q1",
+                type: "single",
+                points: 12,
+                title: "文学常识",
+                text: "《记承天寺夜游》的作者与创作背景正确的一项是？",
+                options: [
+                    { value: "A", label: "苏轼，谪居黄州时感怀旷达" },
+                    { value: "B", label: "苏辙，陪兄夜游杭州城" },
+                    { value: "C", label: "欧阳修，贬官滁州后" }
+                ],
+                answer: ["A"],
+                explanation:
+                    "课文选自苏轼谪居黄州期间的作品，表现了在逆境中的旷达心境。"
+            },
+            {
+                id: "q2",
+                type: "single",
+                points: 12,
+                title: "课文理解",
+                text: "下列对《藤野先生》理解正确的一项是？",
+                options: [
+                    { value: "A", label: "藤野先生主张学生完全依赖讲义" },
+                    { value: "B", label: "藤野先生尊重事实，专注教学，激励鲁迅弃医从文" },
+                    { value: "C", label: "作者对日本学习生活充满浪漫想象" }
+                ],
+                answer: ["B"],
+                explanation:
+                    "文章通过细节描写表现藤野先生治学严谨、淡泊名利，对鲁迅影响深远。"
+            },
+            {
+                id: "q3",
+                type: "multiple",
+                points: 16,
+                title: "跨学科阅读",
+                text: "新版教材强调语文与其他学科融合。以下哪些学习活动符合这一理念？（多选）",
+                options: [
+                    { value: "A", label: "梳理《海底两万里》中的科技想象并制作信息图" },
+                    { value: "B", label: "阅读唐诗后描摹原景" },
+                    { value: "C", label: "开展“家乡非遗”田野调查并撰写采访稿" },
+                    { value: "D", label: "只背诵课下注释" }
+                ],
+                answer: ["A", "C"],
+                explanation:
+                    "统编教材提出“语文实践+综合探究”，强调信息整合与真实任务驱动。"
+            },
+            {
+                id: "q4",
+                type: "single",
+                points: 12,
+                title: "文言文默写",
+                text: "补写《岳阳楼记》中与“居庙堂之高则忧其民”对应的句子。",
+                options: [
+                    { value: "A", label: "先天下之忧而忧，后天下之乐而乐" },
+                    { value: "B", label: "不以物喜，不以己悲" },
+                    { value: "C", label: "政通人和，百废俱兴" }
+                ],
+                answer: ["A"],
+                explanation:
+                    "范仲淹提出的政治抱负句式要求准确背诵。"
+            },
+            {
+                id: "q5",
+                type: "text",
+                points: 12,
+                title: "名著导读",
+                text: "《水浒传》中林冲被逼上梁山的直接原因是？",
+                answer: ["火烧草料场"],
+                keywords: ["火烧草料场", "烧草料场"],
+                explanation:
+                    "高俅父子设局火烧草料场，林冲被诬入狱后走投无路，只得上山。"
+            },
+            {
+                id: "q6",
+                type: "single",
+                points: 12,
+                title: "语用实践",
+                text: "学校开展“古诗词在城市地标中的再发现”活动，你负责写导览文案，以下开头最符合任务要求的是？",
+                options: [
+                    { value: "A", label: "岳阳楼记与洞庭湖的烟波，为我们连接历史与现实。" },
+                    { value: "B", label: "语文课真是太难了。" },
+                    { value: "C", label: "我最喜欢的地标是操场。" }
+                ],
+                answer: ["A"],
+                explanation:
+                    "任务型写作要求明确交代活动背景与文化联系。"
+            },
+            {
+                id: "q7",
+                type: "multiple",
+                points: 12,
+                title: "语法修辞",
+                text: "下列句子运用了比喻或拟人修辞的有哪几项？（多选）",
+                options: [
+                    { value: "A", label: "书声像晨雾，在校园里回荡。" },
+                    { value: "B", label: "我们一起去图书馆。" },
+                    { value: "C", label: "春风拂过，柳条向我们招手。" },
+                    { value: "D", label: "他认真做笔记。" }
+                ],
+                answer: ["A", "C"],
+                explanation:
+                    "A 句使用“像”构成明喻，C 句将柳条拟人化。"
+            },
+            {
+                id: "q8",
+                type: "text",
+                points: 12,
+                title: "文化积累",
+                text: "写出一句含有“月”意象的古诗名句（只需填写一句）。",
+                answer: [],
+                keywords: ["月"],
+                explanation:
+                    "如“海上生明月，天涯共此时”“举头望明月，低头思故乡”等，注意保持原句准确。"
+            }
+        ];
+
+        const questionContainer = document.getElementById("question-container");
+        const form = document.getElementById("quiz-form");
+        const submitBtn = document.getElementById("submit-btn");
+        const resetBtn = document.getElementById("reset-btn");
+        const progressBar = document.querySelector("#progress-bar span");
+        const resultCard = document.getElementById("result-card");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryLevel = document.getElementById("summary-level");
+        const summaryComment = document.getElementById("summary-comment");
+        const questionResults = document.getElementById("question-results");
+        const tipsList = document.getElementById("tips-list");
+
+        function renderQuestions() {
+            questionContainer.innerHTML = "";
+            questions.forEach((q, index) => {
+                const wrapper = document.createElement("section");
+                wrapper.className = "question";
+                wrapper.dataset.id = q.id;
+
+                const title = document.createElement("h3");
+                title.textContent = `Q${index + 1} · ${q.title}`;
+                wrapper.appendChild(title);
+
+                const text = document.createElement("p");
+                text.textContent = q.text;
+                wrapper.appendChild(text);
+
+                if (q.type === "single" || q.type === "multiple") {
+                    q.options.forEach((option) => {
+                        const label = document.createElement("label");
+                        const input = document.createElement("input");
+                        input.type = q.type === "single" ? "radio" : "checkbox";
+                        input.name = q.id + (q.type === "multiple" ? "[]" : "");
+                        input.value = option.value;
+                        label.appendChild(input);
+                        label.appendChild(document.createTextNode(option.label));
+                        wrapper.appendChild(label);
+                    });
+                } else if (q.type === "text") {
+                    const textarea = document.createElement("textarea");
+                    textarea.className = "text-answer";
+                    textarea.name = q.id;
+                    textarea.placeholder = "请输入答案...";
+                    wrapper.appendChild(textarea);
+                }
+
+                questionContainer.appendChild(wrapper);
+            });
+        }
+
+        function getSelectedCount() {
+            let answered = 0;
+            questions.forEach((q) => {
+                if (q.type === "single") {
+                    if (form.querySelector(`input[name='${q.id}']:checked`)) {
+                        answered++;
+                    }
+                } else if (q.type === "multiple") {
+                    if (form.querySelectorAll(`input[name='${q.id}[]']:checked`).length) {
+                        answered++;
+                    }
+                } else if (q.type === "text") {
+                    const textarea = form.querySelector(`textarea[name='${q.id}']`);
+                    if (textarea && textarea.value.trim()) {
+                        answered++;
                     }
                 }
-            }
-            document.getElementById('result').innerHTML = '<h2>\u4f60\u7684\u5f97\u5206：' + score + '/2</h2>';
+            });
+            return answered;
         }
+
+        function updateProgress() {
+            const answered = getSelectedCount();
+            const total = questions.length;
+            const percent = Math.min(100, Math.round((answered / total) * 100));
+            progressBar.style.width = `${percent}%`;
+        }
+
+        function getReferenceAnswer(question) {
+            if (question.type === "text") {
+                if (question.answer && question.answer.length) {
+                    return question.answer.join("，");
+                }
+                if (question.keywords && question.keywords.length) {
+                    return `须包含：${question.keywords.join("、")}`;
+                }
+                return "参见解析";
+            }
+            return question.answer.join("，");
+        }
+
+        function evaluateQuiz(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let detailHtml = "";
+
+            questions.forEach((q) => {
+                let userAnswer = [];
+                if (q.type === "single") {
+                    const selected = form.querySelector(`input[name='${q.id}']:checked`);
+                    if (selected) userAnswer = [selected.value];
+                } else if (q.type === "multiple") {
+                    const checked = form.querySelectorAll(`input[name='${q.id}[]']:checked`);
+                    userAnswer = Array.from(checked).map((c) => c.value);
+                    userAnswer.sort();
+                } else if (q.type === "text") {
+                    const textarea = form.querySelector(`textarea[name='${q.id}']`);
+                    if (textarea) userAnswer = [textarea.value.trim()];
+                }
+
+                let score = 0;
+                let correct = false;
+
+                if (q.type === "text") {
+                    const normalize = (value) => (value || "").replace(/[，。！？,.!\s]/g, "").toLowerCase();
+                    const text = normalize(userAnswer[0]);
+                    if (q.keywords && q.keywords.length) {
+                        const matched = q.keywords.every((keyword) => text.includes(normalize(keyword)));
+                        correct = matched;
+                    } else if (q.answer.length) {
+                        correct = q.answer.some((ans) => normalize(ans) === text);
+                    } else {
+                        correct = text.length > 0;
+                    }
+                } else {
+                    const normalizedUser = [...userAnswer].sort().join("");
+                    const normalizedAnswer = [...q.answer].sort().join("");
+                    correct = normalizedUser === normalizedAnswer;
+                }
+
+                if (correct) {
+                    score = q.points;
+                    totalScore += score;
+                }
+
+                detailHtml += `
+                    <div class="question-result">
+                        <h4>${q.title}</h4>
+                        <p>你的答案：${userAnswer.length ? userAnswer.join("，") : "未作答"}</p>
+                        <p>参考答案：${getReferenceAnswer(q)}</p>
+                        <p>得分：${score} / ${q.points}</p>
+                        <p>解析：${q.explanation}</p>
+                    </div>
+                `;
+            });
+
+            const levelInfo = getLevelInfo(totalScore);
+            summaryScore.textContent = `本次得分：${totalScore} 分`;
+            summaryLevel.textContent = levelInfo.label;
+            summaryLevel.className = `badge ${levelInfo.type}`;
+            summaryComment.textContent = levelInfo.comment;
+            questionResults.innerHTML = detailHtml;
+            tipsList.innerHTML = levelInfo.tips.map((tip) => `<li>${tip}</li>`).join("");
+
+            resultCard.hidden = false;
+            submitBtn.disabled = true;
+        }
+
+        function getLevelInfo(score) {
+            if (score >= 90) {
+                return {
+                    label: "拔尖·可挑战开放性阅读任务",
+                    type: "success",
+                    comment: "表现优异，建议整理自主阅读报告，尝试课堂小讲解。",
+                    tips: [
+                        "在综合性学习中加入数据可视化展示，形成项目闭环",
+                        "拓展阅读《傅雷家书》等家国情怀文本"
+                    ]
+                };
+            }
+            if (score >= 70) {
+                return {
+                    label: "达标·建议精读重点篇章",
+                    type: "warning",
+                    comment: "大部分基础掌握到位，可针对失分题回到课本标注原句。",
+                    tips: [
+                        "重新背诵《岳阳楼记》《与朱元思书》等文言段落",
+                        "把“跨学科语文实践”写成简短学习日志"
+                    ]
+                };
+            }
+            return {
+                label: "待提升·夯实基础",
+                type: "danger",
+                comment: "建议跟随教材导学案逐课复盘，先保证默写与名著线索。",
+                tips: [
+                    "制作《水浒传》人物线索表，梳理林冲经历",
+                    "结合思维导图复述《藤野先生》等现代文"
+                ]
+            };
+        }
+
+        function resetQuiz() {
+            form.reset();
+            progressBar.style.width = "0%";
+            submitBtn.disabled = false;
+            resultCard.hidden = true;
+        }
+
+        form.addEventListener("input", updateProgress);
+        form.addEventListener("submit", evaluateQuiz);
+        resetBtn.addEventListener("click", resetQuiz);
+
+        renderQuestions();
+        updateProgress();
     </script>
 </body>
 </html>
