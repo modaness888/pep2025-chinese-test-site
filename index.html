@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>2025年人教版八年级语文知识测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        .question { margin-bottom: 20px; }
+        button { padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>2025年人教版八年级语文知识测试</h1>
+    <div id="quiz">
+        <div class="question">
+            <p>1. 《记承天寺夜游》这篇古文的作者是谁？</p>
+            <label><input type="radio" name="q1" value="A"> 苏轩</label><br>
+            <label><input type="radio" name="q1" value="B"> 欧阳修</label><br>
+            <label><input type="radio" name="q1" value="C"> 杜甫</label><br>
+        </div>
+        <div class="question">
+            <p>2. 下列哪项体现了新版教材强调的跨学科知识？</p>
+            <label><input type="radio" name="q2" value="A"> 只背读古诗词</label><br>
+            <label><input type="radio" name="q2" value="B"> 阅读科技文章并写感想</label><br>
+            <label><input type="radio" name="q2" value="C"> 模仿名人书法</label><br>
+        </div>
+        <button onclick="gradeQuiz()">提交答案</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        function gradeQuiz() {
+            var score = 0;
+            var answers = {q1: 'A', q2: 'B'};
+            for (var q in answers) {
+                var radios = document.getElementsByName(q);
+                for (var i=0; i<radios.length; i++) {
+                    if (radios[i].checked && radios[i].value === answers[q]) {
+                        score++;
+                    }
+                }
+            }
+            document.getElementById('result').innerHTML = '<h2>\u4f60\u7684\u5f97\u5206：' + score + '/2</h2>';
+        }
+    </script>
+</body>
+</html>
